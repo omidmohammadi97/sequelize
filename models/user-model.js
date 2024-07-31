@@ -24,4 +24,4 @@ async function main() {
     console.log(user.dataValues);
 }
 
-main();
+// main();

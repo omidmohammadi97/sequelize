@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const {  DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db.config");
 
 const customer = sequelize.define('customer' , {
@@ -7,7 +7,6 @@ const customer = sequelize.define('customer' , {
     age : DataTypes.INTEGER
 },
 {
-    sequelize,
     modelName: "customer",
     timestamps : true,
     createdAt : true,
@@ -25,4 +24,4 @@ async function main() {
     console.log(user.dataValues);
 }
 
-main();
+// main();
