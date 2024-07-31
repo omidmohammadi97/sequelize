@@ -18,12 +18,15 @@ const remove  =async(req , res ,next) =>{
     
 }
 const findOne = async(req , res ,next) =>{
+    console.log(req.params)
     const { id }= req.params
+    //we can also use findByPk instead of findOne 
     const product = await productModel.findOne({
-        where : id == id
+        where : {id : id},
+        raw: true
     })
     if(!product) throw new HttpStatusCode.NotFound("محصول مورد نظر پیدا نشد")
-    console.log(product.dataValues)
+    console.log(product)
     
 }
 const findAll = async(req , res ,next) =>{
