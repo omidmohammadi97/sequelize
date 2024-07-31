@@ -1,6 +1,6 @@
+const { HttpStatusCode } = require('axios');
 const {productModel} = require('../models/product-model')
 const create =  async (req , res ,next) =>{
-    console.log(req.body)
     const { productName , productDescription , customerId}= req.body
         const pr = await productModel.create({
             productName : productName,
@@ -9,6 +9,7 @@ const create =  async (req , res ,next) =>{
     });
 
     console.log(pr.dataValues);
+    return;
 }
 const update = async (req , res ,next)=>{
     
@@ -16,13 +17,32 @@ const update = async (req , res ,next)=>{
 const remove  =async(req , res ,next) =>{
     
 }
-const find = async(req , res ,next) =>{
+const findOne = async(req , res ,next) =>{
+    const { id }= req.params
+    const product = await productModel.findOne({
+        where : id == id
+    })
+    if(!product) throw new HttpStatusCode.NotFound("محصول مورد نظر پیدا نشد")
+    console.log(product.dataValues)
     
+}
+const findAll = async(req , res ,next) =>{
+    let {page , count} = req.query 
+    page = parseInt(page, 10);
+    count = parseInt(count, 10);
+    const products = await productModel.findAll({
+    limit : count,
+    offset : (page-1) * count,   
+    raw: true
+     })
+    if(!products) throw new HttpStatusCode.NotFound("چیزی یافت نشد :(")
+    console.log(products)
 }
 
 module.exports = {
     create
     ,update
     ,remove
-    ,find
+    ,findOne
+    ,findAll
 }
