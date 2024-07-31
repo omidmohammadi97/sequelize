@@ -1,7 +1,8 @@
 const express = require('express')
 const dotenv = require("dotenv")
 const sequelize = require("./config/db.config")
-
+require("./models/user-model")
+require("./models/customer-model")
 const app = express()
 
 async function main(){
