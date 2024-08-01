@@ -1,9 +1,5 @@
 const express = require('express')
 const dotenv = require("dotenv")
-// const sequelize = require("./config/db.config")
-// require("./models/user-model")
-// require("./models/customer-model")
-// require("./models/product-model")
 const {mainRouter} = require("./routes")
 
 async function main(){

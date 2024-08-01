@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const {productModel} = require('../models/product-model');
-const { where } = require('sequelize');
+const { biggerThan } = require('../functions/product-functions');
 const create =  async (req , res ,next) =>{
     const { productName , productDescription , customerId}= req.body
         const pr = await productModel.create({
@@ -53,20 +53,27 @@ const findOne = async(req , res ,next) =>{
 }
 const findAll = async(req , res ,next) =>{
     let {page , count} = req.query 
-
+    console.log(page , count)
     page = parseInt(page, 10);
     count = parseInt(count, 10);
     const products = await productModel.findAll({
     limit : count,
     offset : (page-1) * count,   
-    raw: true
+    raw: true,
+    order : [['id' , 'DESC']]
      })
     if(!products) throw new HttpStatusCode.NotFound("چیزی یافت نشد :(")
     console.log(products)
 }
 
+// const findBiggerthan = async(req , res ,next) =>{
+//     let {col ,  condition} = req.query 
+//     const products = await biggerThan(col , condition)
+//     console.log(products)
+// } 
+
 module.exports = {
-    create
+     create
     ,update
     ,remove
     ,findOne
