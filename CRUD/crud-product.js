@@ -1,5 +1,6 @@
 const { HttpStatusCode } = require('axios');
-const {productModel} = require('../models/product-model')
+const {productModel} = require('../models/product-model');
+const { where } = require('sequelize');
 const create =  async (req , res ,next) =>{
     const { productName , productDescription , customerId}= req.body
         const pr = await productModel.create({
@@ -12,10 +13,31 @@ const create =  async (req , res ,next) =>{
     return;
 }
 const update = async (req , res ,next)=>{
-    
+    const { productName , productDescription} = req.body;
+    const {id} = req.params;
+    const product = await productModel.findOne({
+        where : {
+            id : id
+        }
+    });
+    if(!product) throw new HttpStatusCode.NotFound("محصولی یافت نشد");
+    const result = await productModel.update({
+        productName : productName,
+        productDescription : productDescription,
+    },{
+        where:{
+            id : id
+        }
+    }
+)
 }
 const remove  =async(req , res ,next) =>{
-    
+    const {id} = req.params;
+    return await productModel.destroy({
+        where : {
+            id : id
+        }
+    })
 }
 const findOne = async(req , res ,next) =>{
     console.log(req.params)
@@ -31,6 +53,7 @@ const findOne = async(req , res ,next) =>{
 }
 const findAll = async(req , res ,next) =>{
     let {page , count} = req.query 
+
     page = parseInt(page, 10);
     count = parseInt(count, 10);
     const products = await productModel.findAll({
