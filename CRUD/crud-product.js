@@ -1,6 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const {productModel} = require('../models/product-model');
 const { biggerThan } = require('../functions/product-functions');
+const { Op } = require('sequelize');
 const create =  async (req , res ,next) =>{
     const { productName , productDescription , customerId}= req.body
         const pr = await productModel.create({
@@ -29,7 +30,8 @@ const update = async (req , res ,next)=>{
             id : id
         }
     }
-)
+) 
+console.log(result.toJSON())
 }
 const remove  =async(req , res ,next) =>{
     const {id} = req.params;
@@ -65,12 +67,28 @@ const findAll = async(req , res ,next) =>{
     if(!products) throw new HttpStatusCode.NotFound("چیزی یافت نشد :(")
     console.log(products)
 }
+const findByRegx = async(req , res ,next) =>{
+    const products = await productModel.findAll({
+   where:{
+    // productName : {
+    //        // [Op.regexp] : "o$" // datas that ends with o
+    //        // [Op.regexp] : "^e" // datas that starts with e
+    //       // [Op.notRegexp] : "^e" // datas that not starts with e
+    //      // [Op.like] : "%e%" // all products name that includes e in it
 
-// const findBiggerthan = async(req , res ,next) =>{
-//     let {col ,  condition} = req.query 
-//     const products = await biggerThan(col , condition)
-//     console.log(products)
-// } 
+    //     },
+    customerId : {
+        //[Op.in] :[ 1,10] // find all customerIds that includes values in array
+        [Op.notIn] :[ 1,10]  // find all customerIds that not includes values in array
+    }
+   },
+   raw: true,
+   logging:false,
+   attributes : ["id" , "productName" , "productDescription" , "customerId"]
+     })
+    if(!products) throw new HttpStatusCode.NotFound("چیزی یافت نشد :(")
+    console.log(products)
+}
 
 module.exports = {
      create
@@ -78,4 +96,5 @@ module.exports = {
     ,remove
     ,findOne
     ,findAll
+    ,findByRegx
 }
